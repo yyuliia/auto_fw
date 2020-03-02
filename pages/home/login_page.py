@@ -40,11 +40,11 @@ class Login(CustomSeleniumDriver):
         return result
 
     def verify_login_fail(self):
-       result = self.is_element_present("//div[contains(text(),'Invalid email or password.')]", locator_type="xpath")
-       return result
+        result = self.is_element_present("//div[contains(text(),'Invalid email or password.')]", locator_type="xpath")
+        return result
 
     def verify_title(self):
-        if "Let's Kode It" in self.get_title():
+        if "Dance" in self.get_title():
             return True
         else:
             return False
