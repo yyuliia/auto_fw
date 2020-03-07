@@ -1,4 +1,3 @@
-from selenium import webdriver
 from utilities.test_status import TestStatus
 from pages.home.login_page import Login
 import unittest

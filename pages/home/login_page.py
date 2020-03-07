@@ -1,9 +1,8 @@
-from base.custom_selenium_driver import CustomSeleniumDriver
 import utilities.custom_logger as cl
 import logging
+from base.base_page import Base_Page
 
-
-class Login(CustomSeleniumDriver):
+class Login(Base_Page):
 
     log = cl.custom_logger(logging.DEBUG)
 
@@ -44,7 +43,4 @@ class Login(CustomSeleniumDriver):
         return result
 
     def verify_title(self):
-        if "Dance" in self.get_title():
-            return True
-        else:
-            return False
+       return self.verify_page_title("Google")

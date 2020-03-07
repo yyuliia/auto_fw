@@ -1,9 +1,10 @@
 import utilities.custom_logger as cl
 import logging
-from base.custom_selenium_driver import CustomSeleniumDriver
+from traceback import print_stack
+from base.base_page import Base_Page
 
 
-class TestStatus(CustomSeleniumDriver):
+class TestStatus(Base_Page):
 
     log = cl.custom_logger(logging.INFO)
 
@@ -16,16 +17,20 @@ class TestStatus(CustomSeleniumDriver):
             if result is not None:
                 if result:
                     self.resultList.append("Pass")
-                    self.log.info("Verification successfull :: + " + result_message)
+                    self.log.info("Verification successful :: + " + result_message)
                 else:
                     self.resultList.append("FAIL")
-                    self.log.info("Verification failed :: + " + result_message)
+                    self.log.error("Verification failed :: + " + result_message)
+                    self.take_screenshot(result_message)
             else:
                 self.resultList.append("FAIL")
-                self.log.info("Verification failed :: + " + result_message)
+                self.log.error("Verification failed :: + " + result_message)
+                self.take_screenshot(result_message)
         except:
             self.resultList.append("FAIL")
             self.log.error("Exception!")
+            self.take_screenshot(result_message)
+            print_stack()
 
     def mark(self, result, result_message):
         self.set_result(result, result_message)
@@ -38,10 +43,6 @@ class TestStatus(CustomSeleniumDriver):
             self.resultList.clear()
             assert True == False
         else:
-            self.log.info(test_name + " test successfull")
+            self.log.info(test_name + " test successful")
             self.resultList.clear()
             assert True == True
-
-
-
-

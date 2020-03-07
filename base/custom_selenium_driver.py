@@ -5,6 +5,8 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import *
 import utilities.custom_logger as cl
 import logging
+import time
+import os
 
 
 class CustomSeleniumDriver:
@@ -13,6 +15,26 @@ class CustomSeleniumDriver:
 
     def __init__(self, driver):
         self.driver = driver
+
+    def take_screenshot(self, result_message):
+        """
+        For screenshots
+        """
+        file_name = result_message + "." + str(round(time.time() * 1000)) + ".png"
+        screenshot_dir = "../screenshots/"
+        relative_file = screenshot_dir + file_name
+        current_dir = os.path.dirname(__file__)
+        destination_file = os.path.join(current_dir, relative_file)
+        destination_dir = os.path.join(current_dir, screenshot_dir)
+
+        try:
+            if not os.path.exists(destination_dir):
+                os.makedirs(destination_dir)
+            self.driver.save_screenshot(destination_file)
+            self.log.info("Saved to " + destination_file)
+        except:
+            self.log.error("Exception!")
+            print_stack()
 
     def get_title(self):
         return self.driver.title
@@ -104,4 +126,3 @@ class CustomSeleniumDriver:
             self.log.info("Element not appeared on the web page")
             print_stack()
         return element
-
