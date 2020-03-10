@@ -1,8 +1,9 @@
 import utilities.custom_logger as cl
 import logging
-from base.base_page import Base_Page
+from base.base_page import BasePage
 
-class Login(Base_Page):
+
+class Login(BasePage):
 
     log = cl.custom_logger(logging.DEBUG)
 

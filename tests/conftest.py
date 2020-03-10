@@ -1,5 +1,6 @@
 import pytest
 from base.webdriver_factory import WebDriverFactory
+from pages.home.login_page import Login
 
 
 @pytest.yield_fixture(scope="class")
@@ -10,6 +11,8 @@ def one_time_set_up(request, browser):
 
     if request.cls is not None:
         request.cls.driver = driver
+        lp = Login(driver)
+        lp.login('test@email.com', 'abcabc')
 
     yield driver
     driver.quit()

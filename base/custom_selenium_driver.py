@@ -57,6 +57,31 @@ class CustomSeleniumDriver:
             self.log.info("Locator type " + locator_type + "not supported")
         return False
 
+    def switch_iframe(self, id="", name="", index=None):
+        """
+        Optional data
+        :param id:
+        :param name:
+        :param index:
+        :return: None
+        """
+        if id:
+            self.driver.switch_to.frame(id)
+        elif name:
+            self.driver.switch_to.frame(name)
+        else:
+            self.driver.switch_to.frame(index)
+
+
+    def switch_default_content(self):
+        self.driver.switch_to.default_content()
+
+    def get_element_attribute(self, attribute, element=None, locator="", locator_type="id"):
+        if locator:
+            self.get_element(locator, locator_type)
+        value = element.get_attribute(attribute)
+        return value
+
     def get_element(self, locator, locator_type="id"):
         element = None
         try:
@@ -68,27 +93,59 @@ class CustomSeleniumDriver:
             self.log.info("Element not found")
         return element
 
-    def element_click(self, locator, locator_type="id"):
+    def get_element_list(self, locator, locator_type="id"):
+        element = None
         try:
-            element = self.get_element(locator, locator_type)
+            locator_type = locator_type.lower()
+            by_type = self.get_by_type(locator_type)
+            element = self.driver.find_elements(by_type, locator)
+            self.log.info("Element list found with locator: " + locator + " and locator_type: " + locator_type)
+        except:
+            self.log.info("Element list not found with locator: " + locator + " and locator_type: " + locator_type)
+        return element
+
+    def element_click(self, locator="", locator_type="id", element=None):
+        try:
+            if locator:
+                element = self.get_element(locator, locator_type)
             element.click()
             self.log.info("Clicked on element with locator: " + locator + " locator_type: " + locator_type)
         except:
             self.log.info("Oooops! not clickable")
             print_stack()
 
-    def send_data(self, data, locator, locator_type="id"):
+    def send_data(self, data, locator="", locator_type="id", element=None):
         try:
-            element = self.get_element(locator, locator_type)
+            if locator:
+                element = self.get_element(locator, locator_type)
             element.send_keys(data)
             self.log.info("Sent data to element with locator: " + locator + " locator_type: " + locator_type)
         except:
             self.log.info("Oooops! can not send")
             print_stack()
 
-    def is_element_present(self, locator, locator_type="id"):
+    def get_text(self, locator="", locator_type="id", element=None, info=""):
         try:
-            element = self.get_element(locator, locator_type)
+            if locator:
+                self.log.debug("In locator condition")
+                element = self.get_element(locator, locator_type)
+            self.log.debug("Before finding text")
+            text = element.text
+            self.log.debug("After finding element, size is: " + str(len(text)))
+            if len(text) != 0:
+                self.log.info("Getting text on element: " + info)
+                self.log.info("The text is: " + text)
+                text = text.strip()
+        except:
+            self.log.error("Failed to get text on element " + info)
+            print_stack()
+            text = None
+        return text
+
+    def is_element_present(self, locator="", locator_type="id", element=None):
+        try:
+            if locator:
+                element = self.get_element(locator, locator_type)
             if element is not None:
                 self.log.info("Element found")
                 return True
@@ -97,6 +154,25 @@ class CustomSeleniumDriver:
                 return False
         except:
             return False
+
+    def is_element_enabled(self, locator, locator_type="id", info=""):
+        element = self.get_element(locator, locator_type)
+        enabled = False
+        try:
+            attribute_value = self.get_element_attribute(element, attribute="disabled")
+            if attribute_value is not None:
+                enabled = element.is_enabled()
+            else:
+                value = self.get_element_attribute(element, attribute="class")
+                self.log.info("Attribute value from WEB: " + value)
+                enabled = not ("disabled" in value)
+            if enabled:
+                self.log.info("Element :" + info + " is enabled")
+            else:
+                self.log.info("Element :" + info + " is not enabled")
+        except:
+            self.log.info("Element :" + info + " state could not be found")
+        return enabled
 
     def elements_presence_check(self, locator, by_type):
         try:
@@ -108,6 +184,21 @@ class CustomSeleniumDriver:
                 self.log.info("Element not found")
                 return False
         except:
+            return False
+
+    def is_element_displayed(self, locator="", locator_type="id", element=None):
+        displayed = False
+        try:
+            if locator:
+                element = self.get_element(locator, locator_type)
+            if element is not None:
+                displayed = element.is_displayed()
+                self.log.info("Element is displayed with locator: " + locator + " locator_type: " + locator_type)
+            else:
+                self.log.info("Element is not displayed with locator: " + locator + " locator_type: " + locator_type)
+            return displayed
+        except:
+            print("Element not found")
             return False
 
     def wait_for_element(self, locator, locator_type="id",
@@ -126,3 +217,9 @@ class CustomSeleniumDriver:
             self.log.info("Element not appeared on the web page")
             print_stack()
         return element
+
+    def custom_scroll(self, direction="up"):
+        if direction == "up":
+            self.driver.execute_script("window.scrollBy(0, -1000);")
+        if direction == "down":
+            self.driver.execute_script("window.scrollBy(0, 800);")

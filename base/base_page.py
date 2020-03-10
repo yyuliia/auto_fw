@@ -3,14 +3,14 @@ from traceback import print_stack
 from utilities.util import Util
 
 
-class Base_Page(CustomSeleniumDriver):
+class BasePage(CustomSeleniumDriver):
 
     def __init__(self, driver):
         """
         Init for base class
 
         """
-        super(Base_Page, self).__init__(driver)
+        super(BasePage, self).__init__(driver)
         self.driver = driver
         self.util = Util()
 

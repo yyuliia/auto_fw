@@ -1,15 +1,15 @@
 import utilities.custom_logger as cl
 import logging
 from traceback import print_stack
-from base.base_page import Base_Page
+from base.base_page import BasePage
 
 
-class TestStatus(Base_Page):
+class AssertStatus(BasePage):
 
     log = cl.custom_logger(logging.INFO)
 
     def __init__(self, driver):
-        super(TestStatus, self).__init__(driver)
+        super(AssertStatus, self).__init__(driver)
         self.resultList = []
 
     def set_result(self, result, result_message):

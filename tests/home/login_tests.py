@@ -1,4 +1,4 @@
-from utilities.test_status import TestStatus
+from utilities.test_status import AssertStatus
 from pages.home.login_page import Login
 import unittest
 import pytest
@@ -10,7 +10,7 @@ class LoginTests(unittest.TestCase):
     @pytest.fixture(autouse=True)
     def class_setup(self, one_time_set_up):
         self.lp = Login(self.driver)
-        self.ts = TestStatus(self.driver)
+        self.ts = AssertStatus(self.driver)
 
     def test_invalid_login(self):
         self.lp.login(password='abaabcabc')
