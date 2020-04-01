@@ -13,13 +13,14 @@ class LoginTests(unittest.TestCase):
         self.ts = AssertStatus(self.driver)
 
     def test_invalid_login(self):
+        self.lp.logout()
         self.lp.login(password='abaabcabc')
         result = self.lp.verify_login_fail()
         self.ts.mark(result, "good to go")
 
     def test_valid_login(self):
+        self.lp.login('test@email.com', 'abcabc')
         result_title = self.lp.verify_title()
         self.ts.mark(result_title, "should fail")
-        self.lp.login('test@email.com', 'abcabc')
         result = self.lp.verify_login_success()
         self.ts.mark_final("test_valid_login", result, "should be valid")

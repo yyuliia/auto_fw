@@ -1,4 +1,5 @@
 import utilities.custom_logger as cl
+from pages.home.navigation_page import NavigationPage
 import logging
 from base.base_page import BasePage
 
@@ -10,12 +11,14 @@ class Login(BasePage):
     def __init__(self, driver):
         super().__init__(driver)
         self.driver = driver
+        self.navigation = NavigationPage(driver)
 
     # Locators
     _login_link = 'Login'
     _email_field = 'user_email'
     _password_field = 'user_password'
     _login_button = 'commit'
+    _logout_link = 'Log Out'
 
     def click_login_link(self):
         self.element_click(self._login_link, locator_type="link")
@@ -44,4 +47,9 @@ class Login(BasePage):
         return result
 
     def verify_title(self):
-       return self.verify_page_title("Google")
+       return self.verify_page_title("Let's Kode It")
+
+    def logout(self):
+        self.navigation.click_user_icon()
+        logout_link_element = self.wait_for_element(self._logout_link, locator_type="link", pollFrequency=1)
+        self.element_click(element=logout_link_element)

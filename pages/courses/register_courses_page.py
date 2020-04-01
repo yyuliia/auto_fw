@@ -12,7 +12,6 @@ class CoursesPage(BasePage):
         self.driver = driver
 
 # find out _locators
-
     _search_box = 'search-courses' # by id
     _search_box_button = 'search-course-button' # by id
     _course = '//div[contains(@class, "course-listing-title") and contains(text(), "{0}")]' # by xpath
@@ -23,6 +22,7 @@ class CoursesPage(BasePage):
     _postal_code = 'postal' # by name
     _agreed_to_terms = '//input[@id="agreed_to_terms_checkbox"]' # by xpath
     _submit_enroll = 'confirm-purchase' # by id
+
 
     def select_course_name(self, name):
         self.send_data(name, self._search_box)
